@@ -1,21 +1,26 @@
 package main
 
 import (
-    "ecommerce/backend/database"
-    "ecommerce/backend/routes"
-    "github.com/gin-gonic/gin"
+	"ecommerce-backend/database"
+	"ecommerce-backend/routes"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-    // Inicializar la base de datos
-    database.InitDB()
+	// Inicializar la base de datos
+	database.InitDB()
 
-    // Crear el servidor Gin
-    server := gin.Default()
+	// Crear el servidor Gin
+	r := gin.Default()
 
-    // Definir las rutas
-    routes.SetupRoutes(server)
+	// habilitar CORS
+	r.Use(cors.Default())
 
-    // Iniciar el servidor
-    server.Run(":8080")
+	// Definir las rutas
+	routes.SetupRoutes(r)
+
+	// Iniciar el servidor
+	r.Run(":8080")
+
 }

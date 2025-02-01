@@ -4,18 +4,18 @@ import (
     "fmt"
     "gorm.io/driver/sqlite"
     "gorm.io/gorm"
+    "ecommerce-backend/models" // Importa el paquete models
 )
 
-var DB *gorm.DB
-
+// Función para inicializar la base de datos
 func InitDB() {
     var err error
-    DB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+    models.DB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
     if err != nil {
         panic("failed to connect database")
     }
 
     // Migrar el esquema
-    DB.AutoMigrate(&Product{})
+    models.DB.AutoMigrate(&models.Product{})
     fmt.Println("Database connected and migrated!")
 }

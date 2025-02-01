@@ -2,16 +2,21 @@ package controllers
 
 import (
     "net/http"
-    "ecommerce/backend/models"
+    "ecommerce-backend/models" // Importa el paquete models
     "github.com/gin-gonic/gin"
 )
 
+// Obtener todos los productos
 func GetProducts(c *gin.Context) {
     var products []models.Product
-    models.DB.Find(&products)
+    if err := models.DB.Find(&products).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch products"})
+        return
+    }
     c.JSON(http.StatusOK, products)
 }
 
+// Crear un nuevo producto
 func CreateProduct(c *gin.Context) {
     var input models.Product
     if err := c.ShouldBindJSON(&input); err != nil {
@@ -19,6 +24,9 @@ func CreateProduct(c *gin.Context) {
         return
     }
 
-    models.DB.Create(&input)
+    if err := models.DB.Create(&input).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create product"})
+        return
+    }
     c.JSON(http.StatusCreated, input)
 }
